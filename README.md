@@ -22,7 +22,7 @@ No `nn.TransformerBlock`. No framework hiding the math. Just embeddings, attenti
 
 This is my **learning project** — and I built it so that others can learn from it too.
 
-I rebuilt **GPT-2 from scratch, entirely by myself**: every layer written by hand in plain PyTorch, starting from a single embedding table and ending with a complete language model. As the final step, I **loaded the real GPT-2 weights from Hugging Face into my own model classes** — same architecture, original 124M weights, real English coming out. That is the proof that the from-scratch implementation is genuinely correct and not just "close enough".
+I rebuilt **GPT-2 from scratch, entirely by myself**: every layer written by hand and my good friend Claude in plain PyTorch, starting from a single embedding table and ending with a complete language model. As the final step, I **loaded the real GPT-2 weights from Hugging Face into my own model classes** — same architecture, original 124M weights, real English coming out. That is the proof that the from-scratch implementation is genuinely correct and not just "close enough".
 
 Instead of collapsing everything into one polished library, I kept **every step as its own small, runnable file**. That way the repository doubles as a course you can walk through: run one file, read its printed tensor shapes, change a number, run it again.
 
