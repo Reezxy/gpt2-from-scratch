@@ -1,0 +1,6 @@
+# Core: everything from step 01 to step 16 only needs these two.
+torch>=2.1.0
+tiktoken>=0.5.0
+
+# Only needed for step 17 (loading the real GPT-2 124M weights from Hugging Face).
+transformers>=4.35.0

@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Every model configuration used in this repository. The step scripts keep these values hard-coded on purpose (each file must be readable top to bottom on its own) - this file is the machine-readable overview of what those scripts do.",
+  "tokenizer": {
+    "name": "gpt2",
+    "library": "tiktoken",
+    "vocab_size": 50257
+  },
+  "models": {
+    "mini": {
+      "used_by": ["12_train.py", "14.generate.py"],
+      "checkpoint": "gpt2_mini.pt",
+      "dataset": "tiny_shakespeare",
+      "parameters": 7232896,
+      "architecture": {
+        "vocab_size": 50257,
+        "embed_dim": 128,
+        "num_heads": 4,
+        "num_layers": 4,
+        "max_seq_len": 64,
+        "head_dim": 32,
+        "mlp_ratio": 4,
+        "weight_tying": true,
+        "qkv_bias": false,
+        "gelu": "exact"
+      },
+      "training": {
+        "optimizer": "AdamW",
+        "learning_rate": 0.0003,
+        "batch_size": 16,
+        "block_size": 64,
+        "num_steps": 500,
+        "eval_interval": 25,
+        "train_val_split": 0.9
+      },
+      "generation": {
+        "temperature": 0.8,
+        "max_new_tokens": 100,
+        "sampling": "multinomial"
+      }
+    },
+    "scaled": {
+      "used_by": ["15_scale_up_train.py", "16_generate_scaled.py"],
+      "checkpoint": "gpt2_scaled.pt",
+      "dataset": "gutenberg_books",
+      "parameters": 30037632,
+      "architecture": {
+        "vocab_size": 50257,
+        "embed_dim": 384,
+        "num_heads": 6,
+        "num_layers": 6,
+        "max_seq_len": 256,
+        "head_dim": 64,
+        "mlp_ratio": 4,
+        "weight_tying": true,
+        "qkv_bias": false,
+        "gelu": "exact"
+      },
+      "training": {
+        "optimizer": "AdamW",
+        "learning_rate": 0.0003,
+        "batch_size": 24,
+        "block_size": 256,
+        "num_steps": 3000,
+        "eval_interval": 100,
+        "train_val_split": 0.95,
+        "checkpoint_every_eval": true,
+        "resumable_on_keyboard_interrupt": true
+      },
+      "generation": {
+        "temperature": 0.8,
+        "max_new_tokens": 120,
+        "sampling": "multinomial"
+      }
+    },
+    "gpt2-124m": {
+      "used_by": ["08.gpt2_model.py", "17_load_real_gpt2.py"],
+      "checkpoint": "downloaded from Hugging Face (openai-community/gpt2)",
+      "dataset": "WebText (not reproduced here - OpenAI's original training data)",
+      "parameters": 124439808,
+      "architecture": {
+        "vocab_size": 50257,
+        "embed_dim": 768,
+        "num_heads": 12,
+        "num_layers": 12,
+        "max_seq_len": 1024,
+        "head_dim": 64,
+        "mlp_ratio": 4,
+        "weight_tying": true,
+        "qkv_bias": true,
+        "gelu": "tanh-approximation"
+      },
+      "generation": {
+        "temperature": 0.8,
+        "max_new_tokens": 80,
+        "sampling": "multinomial"
+      }
+    }
+  },
+  "weight_mapping": {
+    "description": "How Hugging Face GPT-2 state_dict keys map onto the modules in this repository (see 17_load_real_gpt2.py). Conv1D weights in the HF implementation are stored transposed relative to nn.Linear, so every '.weight' below needs a .T when copied.",
+    "transpose_required": true,
+    "map": {
+      "transformer.wte.weight": "token_embedding.weight",
+      "transformer.wpe.weight": "position_embedding.weight",
+      "transformer.h.{i}.ln_1.weight": "blocks.{i}.ln1.weight",
+      "transformer.h.{i}.ln_1.bias": "blocks.{i}.ln1.bias",
+      "transformer.h.{i}.attn.c_attn.weight": "blocks.{i}.attn.{query,key,value}.weight (split into 3 chunks of embed_dim)",
+      "transformer.h.{i}.attn.c_attn.bias": "blocks.{i}.attn.{query,key,value}.bias (split into 3 chunks of embed_dim)",
+      "transformer.h.{i}.attn.c_proj.weight": "blocks.{i}.attn.out_proj.weight",
+      "transformer.h.{i}.attn.c_proj.bias": "blocks.{i}.attn.out_proj.bias",
+      "transformer.h.{i}.ln_2.weight": "blocks.{i}.ln2.weight",
+      "transformer.h.{i}.ln_2.bias": "blocks.{i}.ln2.bias",
+      "transformer.h.{i}.mlp.c_fc.weight": "blocks.{i}.mlp.fc1.weight",
+      "transformer.h.{i}.mlp.c_fc.bias": "blocks.{i}.mlp.fc1.bias",
+      "transformer.h.{i}.mlp.c_proj.weight": "blocks.{i}.mlp.fc2.weight",
+      "transformer.h.{i}.mlp.c_proj.bias": "blocks.{i}.mlp.fc2.bias",
+      "transformer.ln_f.weight": "ln_final.weight",
+      "transformer.ln_f.bias": "ln_final.bias",
+      "lm_head.weight": "head.weight (tied to token_embedding.weight, no copy needed)"
+    }
+  }
+}

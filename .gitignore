@@ -1,0 +1,28 @@
+# Model checkpoints (regenerate them with 12_train.py / 15_scale_up_train.py)
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+
+# Training data (downloaded automatically on first run)
+shakespeare.txt
+book_corpus.txt
+books/
+
+# Hugging Face cache
+.cache/
+hf_cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store

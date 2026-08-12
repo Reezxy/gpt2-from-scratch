@@ -1,0 +1,68 @@
+{
+  "description": "All training data used in this repository. Nothing here is committed to git - the scripts download these files on first run (see .gitignore). This manifest exists so you can see exactly what the model was fed without running anything.",
+  "datasets": {
+    "tiny_shakespeare": {
+      "used_by": ["11.data_prep.py", "12_train.py"],
+      "local_path": "shakespeare.txt",
+      "source_url": "https://raw.githubusercontent.com/karpathy/char-rnn/master/data/tinyshakespeare/input.txt",
+      "license": "public domain",
+      "approx_characters": 1115394,
+      "approx_gpt2_tokens": 338025,
+      "train_val_split": 0.9,
+      "why": "Small enough to overfit in minutes on a laptop, which makes the loss curve move fast enough to stay interesting."
+    },
+    "gutenberg_books": {
+      "used_by": ["15_scale_up_train.py", "16_generate_scaled.py"],
+      "local_path": "book_corpus.txt",
+      "download_dir": "books/",
+      "source": "Project Gutenberg",
+      "url_template": "https://www.gutenberg.org/cache/epub/{id}/pg{id}.txt",
+      "license": "public domain in the US (Project Gutenberg License)",
+      "approx_characters": 9239547,
+      "train_val_split": 0.95,
+      "preprocessing": [
+        "Download each book as plain UTF-8 text into books/{id}.txt",
+        "Cut everything before the '*** START' marker and after the '*** END' marker to drop the Gutenberg boilerplate",
+        "Join all books with a blank line between them into book_corpus.txt",
+        "Encode the whole corpus with the GPT-2 BPE tokenizer (tiktoken)"
+      ],
+      "books": [
+        { "id": 1342, "title": "Pride and Prejudice", "author": "Jane Austen" },
+        { "id": 84, "title": "Frankenstein", "author": "Mary Shelley" },
+        { "id": 11, "title": "Alice's Adventures in Wonderland", "author": "Lewis Carroll" },
+        { "id": 1661, "title": "The Adventures of Sherlock Holmes", "author": "Arthur Conan Doyle" },
+        { "id": 2701, "title": "Moby Dick", "author": "Herman Melville" },
+        { "id": 98, "title": "A Tale of Two Cities", "author": "Charles Dickens" },
+        { "id": 345, "title": "Dracula", "author": "Bram Stoker" },
+        { "id": 74, "title": "The Adventures of Tom Sawyer", "author": "Mark Twain" },
+        { "id": 76, "title": "Adventures of Huckleberry Finn", "author": "Mark Twain" },
+        { "id": 5200, "title": "Metamorphosis", "author": "Franz Kafka" },
+        { "id": 2554, "title": "Crime and Punishment", "author": "Fyodor Dostoyevsky" },
+        { "id": 1400, "title": "Great Expectations", "author": "Charles Dickens" },
+        { "id": 158, "title": "Emma", "author": "Jane Austen" },
+        { "id": 46, "title": "A Christmas Carol", "author": "Charles Dickens" },
+        { "id": 43, "title": "The Strange Case of Dr Jekyll and Mr Hyde", "author": "Robert Louis Stevenson" }
+      ]
+    },
+    "pretrained_gpt2_124m": {
+      "used_by": ["17_load_real_gpt2.py"],
+      "source": "Hugging Face - openai-community/gpt2",
+      "loader": "transformers.GPT2LMHeadModel.from_pretrained(\"gpt2\")",
+      "download_size_mb": 500,
+      "license": "MIT (model weights, as published by OpenAI)",
+      "note": "These are the original OpenAI weights. This repository does not retrain them - it only proves the from-scratch architecture is correct by loading them into it."
+    }
+  },
+  "sample_prompts": {
+    "mini": ["ROMEO:"],
+    "scaled": [
+      "It was a dark and stormy night",
+      "Elizabeth looked at",
+      "The doctor said"
+    ],
+    "gpt2-124m": [
+      "It was a dark and stormy night",
+      "The meaning of life is"
+    ]
+  }
+}
